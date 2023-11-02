@@ -42,29 +42,18 @@ public class HashListAutocomplete implements Autocompletor {
         for(int j=0; j < terms.length; j++) {
             int i = 0;
             while(i <= terms[j].length() && i <= 10) {
-                String substring = terms[j].substring(0, i);
-                if(!myMap.containsKey(substring)) {
-                    myMap.put(substring, new ArrayList<>());
-                    mySize += BYTES_PER_CHAR*substring.length();
+                String prefix = terms[j].substring(0, i);
+                if(!myMap.containsKey(prefix)) {
+                    myMap.put(prefix, new ArrayList<>());
+                    mySize += BYTES_PER_CHAR*prefix.length();
                 }
-                myMap.get(substring).add(new Term(terms[j], weights[j]));
+                myMap.get(prefix).add(new Term(terms[j], weights[j]));
                 mySize += BYTES_PER_CHAR*terms[j].length();
                 mySize += BYTES_PER_DOUBLE;
                 i++;
             }
         }
-        /*for (int i = 0; i < terms.length; i++) {
-            for (int j = 0; j < terms[i].length(); j++) {
-                String prefix = terms[i].substring(0, j);
-                if (!myMap.containsKey(prefix)) {
-                    myMap.put(prefix, new ArrayList<>());
-                    mySize += BYTES_PER_CHAR * prefix.length();
-                }
-                myMap.get(prefix).add(new Term(terms[i], weights[i]));
-                mySize += BYTES_PER_CHAR * terms[i].length();
-                mySize += BYTES_PER_DOUBLE;
-            }
-        }*/
+    
 
         for (String key : myMap.keySet()) {
             Collections.sort(myMap.get(key), Comparator.comparing(Term::getWeight).reversed());
