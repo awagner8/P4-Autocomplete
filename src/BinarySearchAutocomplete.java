@@ -112,10 +112,43 @@ public class BinarySearchAutocomplete implements Autocompletor {
 			return new ArrayList<>();
 		}
 
-		// write code here for assignment
+		PriorityQueue<Term> pq = new PriorityQueue<>(Comparator.comparing(Term::getWeight));
+		Term[] temp = Arrays.copyOfRange(myTerms, first, last+1);
+		for (Term t : temp) {
+			//if (!t.getWord().startsWith(prefix)) {
+				//continue; // don't process if doesn't begin with prefix
+			//}
+			
+			if (pq.size() < k) {
+				pq.add(t);
+			} else if (pq.peek().getWeight() < t.getWeight()) {
+				pq.remove();
+				pq.add(t);
+			}
+			
+		}
+		// after loop, pq holds *at most* k Terms and
+		// these are terms that are the "heaviest" based on code above
+		// since pq is a min-pq, lightest/least-heavy is first to be removed
 
-		return null;
-	
+		int numResults = Math.min(k, pq.size());
+		LinkedList<Term> ret = new LinkedList<>();
+		for (int i = 0; i < numResults; i++) {
+			ret.addFirst(pq.remove());
+		}
+		return ret;
+	}
+	public List<Term> topSort(String prefix, int k){
+		ArrayList<Term> list = new ArrayList<>();
+		for(Term t : myTerms) {
+			if (t.getWord().startsWith(prefix)) {
+				list.add(t);
+			}
+		}
+		Collections.sort(list,Comparator.comparing(Term::getWeight)
+				                        .reversed());
+		return list.subList(0,Math.min(list.size(),k));
+
 	}
 
 	@Override

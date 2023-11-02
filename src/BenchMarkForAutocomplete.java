@@ -97,7 +97,7 @@ public class BenchMarkForAutocomplete {
 
 	}
 	public void doMark() throws FileNotFoundException {
-		String fname = "data/threeletterwords.txt"; 
+		String fname = "/Users/swagner/Documents/Duke Fall '23/CS 201/Projects/p4-autocomplete/data/threeletterwords.txt"; 
 		//fname = "data/fourletterwords.txt";
 		//fname = "data/alexa.txt";
 		setUp(fname);
