@@ -1,5 +1,5 @@
 /*@author Avi Wagner
- */
+*/
 import java.util.*;
 
 public class HashListAutocomplete implements Autocompletor {
@@ -38,33 +38,42 @@ public class HashListAutocomplete implements Autocompletor {
 
     @Override
     public void initialize(String[] terms, double[] weights) {
-        for (int i = 0; i < terms.length; i++) {
-            for (int j = 0; j < MAX_PREFIX; j++) {
+        myMap = new HashMap<>();
+        for(int j=0; j < terms.length; j++) {
+            int i = 0;
+            while(i <= terms[j].length() && i <= 10) {
+                String substring = terms[j].substring(0, i);
+                if(!myMap.containsKey(substring)) {
+                    myMap.put(substring, new ArrayList<>());
+                    mySize += BYTES_PER_CHAR*substring.length();
+                }
+                myMap.get(substring).add(new Term(terms[j], weights[j]));
+                mySize += BYTES_PER_CHAR*terms[j].length();
+                mySize += BYTES_PER_DOUBLE;
+                i++;
+            }
+        }
+        /*for (int i = 0; i < terms.length; i++) {
+            for (int j = 0; j < terms[i].length(); j++) {
                 String prefix = terms[i].substring(0, j);
                 if (!myMap.containsKey(prefix)) {
                     myMap.put(prefix, new ArrayList<>());
+                    mySize += BYTES_PER_CHAR * prefix.length();
                 }
                 myMap.get(prefix).add(new Term(terms[i], weights[i]));
+                mySize += BYTES_PER_CHAR * terms[i].length();
+                mySize += BYTES_PER_DOUBLE;
             }
-        }
+        }*/
 
         for (String key : myMap.keySet()) {
-            List<Term> list = myMap.get(key);
-            list.sort(Comparator.comparing(Term::getWeight).reversed());
-            if (list.size() > mySize) {
-                list = list.subList(0, mySize);
-            }
-            myMap.put(key, list);
+            Collections.sort(myMap.get(key), Comparator.comparing(Term::getWeight).reversed());
         }
         
     }
 
     @Override
     public int sizeInBytes() {
-        if (myMap == null) {
-            return 0;
-        }
-        return myMap.size() * mySize * 8;
+        return mySize;
     }  
 }
-
