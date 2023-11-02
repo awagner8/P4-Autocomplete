@@ -99,7 +99,7 @@ public class BinarySearchAutocomplete implements Autocompletor {
 	
 	@Override
 	public List<Term> topMatches(String prefix, int k) {
-		if (k < 0) {
+		if (k <= 0) {
 			throw new IllegalArgumentException("Illegal value of k:"+k);
 		}
 
