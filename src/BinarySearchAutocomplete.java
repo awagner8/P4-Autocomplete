@@ -97,7 +97,6 @@ public class BinarySearchAutocomplete implements Autocompletor {
 	 * @throws NullPointerException if prefix is null
 	 */
 	
-	@Override
 	public List<Term> topMatches(String prefix, int k) {
 		if (k < 0) {
 			throw new IllegalArgumentException("Illegal value of k:"+k);
@@ -141,7 +140,7 @@ public class BinarySearchAutocomplete implements Autocompletor {
 		}
 		return ret;
 	}
-	public List<Term> topSort(String prefix, int k){
+	private List<Term> topSort(String prefix, int k){
 		ArrayList<Term> list = new ArrayList<>();
 		for(Term t : myTerms) {
 			if (t.getWord().startsWith(prefix)) {
